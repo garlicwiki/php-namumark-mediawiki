@@ -124,7 +124,16 @@ function NamuMarkHTML( Parser &$parser, &$text ) {
         $text = $Extra->text;
 
 		# 파서를 불러온다.
+		$wikiurl = "http://namu.wiki";
+		$wikiname ="";
+		$raw_document = "http://namu.wiki/raw/[document_name]";
+		$contrib = "http://namu.wiki/history/[document_name]";
 		$wEngine = new NamuMark2($text, $title);
+		if($text == ""){ #Page Not Exist.
+			$text = "<div style=\"border:1px solid gray;border-top:5px solid #00A495;padding:12px\"<h3> 이 문서는 $wikiname ([[$wikiurl]]) 에서 포크되어온 문서입니다. 또한, '''이문서는 사용자의 문서 검색으로 인하여 생성되었습니다.''' 이 문서의 원 기여자는 [[$contrib]]에서 확인하실 수 있습니다. $wikiname의 서버혹은 서비스 문제로 기여자 확인이 불가능한 상태에서는 직접 저희가 안내해 드리겠습니다.</h3>";
+			$external_text = file_get_contents($raw_document);
+			$text += $external_text;
+		}
 		$text =  $wEngine->toHtml();
 
 		$Extra = new NamuMarkExtra($text, $title);
